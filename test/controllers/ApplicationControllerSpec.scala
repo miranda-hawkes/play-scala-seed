@@ -121,13 +121,10 @@ class ApplicationControllerSpec extends UnitSpec with GuiceOneAppPerSuite with M
 
       "return an error" in {
 
-        intercept[GenericDriverException] {
-          val result = TestApplicationController.create()(FakeRequest().withBody(jsonBody))
+        val result = TestApplicationController.create()(FakeRequest().withBody(jsonBody))
 
-          status(result) shouldBe Status.INTERNAL_SERVER_ERROR
-
-          await(bodyOf(result)) shouldBe Json.obj("message" -> "Error adding item to Mongo")
-        }
+        status(result) shouldBe Status.INTERNAL_SERVER_ERROR
+        await(bodyOf(result)) shouldBe Json.obj("message" -> "Error adding item to Mongo").toString()
       }
     }
   }
