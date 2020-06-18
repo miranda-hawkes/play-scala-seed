@@ -2,6 +2,7 @@ package controllers
 
 import javax.inject._
 import play.api._
+import play.api.i18n.{Lang, MessagesApi}
 import play.api.mvc._
 
 /**

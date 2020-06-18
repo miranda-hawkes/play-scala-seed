@@ -18,7 +18,7 @@ libraryDependencies += "org.scalatestplus.play" %% "scalatestplus-play"   % "3.1
 libraryDependencies += "uk.gov.hmrc"            %% "hmrctest"             % "3.9.0-play-26"  % Test
 libraryDependencies += "org.mockito"            %  "mockito-core"         % "2.28.2"         % Test
 
-herokuAppName in Compile := "aqueous-plateau-01338"
+herokuAppName in Compile := "mh-play-scala-api"
 herokuProcessTypes in Compile := Map(
   "web" -> "target/universal/stage/bin/play-scala-seed -Dhttp.port=$PORT -Dplay.http.secret.key=${APPLICATION_SECRET} -Dmongodb.uri=${MONGODB_URI}"
 )

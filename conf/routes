@@ -6,9 +6,9 @@
 # An example controller showing a sample home page
 GET     /                           controllers.HomeController.index
 
-GET     /api/index                  controllers.ApplicationController.index
-GET     /api/:id                    controllers.ApplicationController.read(id: String)
+GET     /api                        controllers.ApplicationController.index
 POST    /api                        controllers.ApplicationController.create
+GET     /api/:id                    controllers.ApplicationController.read(id: String)
 PUT     /api/:id                    controllers.ApplicationController.update(id: String)
 DELETE  /api/:id                    controllers.ApplicationController.delete(id: String)
 
