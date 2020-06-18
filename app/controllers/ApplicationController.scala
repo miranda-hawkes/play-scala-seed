@@ -20,7 +20,7 @@ import javax.inject.Inject
 import models.DataModel
 import play.api.libs.json.{JsError, JsSuccess, JsValue, Json}
 import play.api.mvc.{Action, AnyContent, BaseController, ControllerComponents}
-import reactivemongo.core.errors.GenericDriverException
+import reactivemongo.core.errors.{DatabaseException, GenericDriverException}
 import repositories.DataRepository
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -33,11 +33,11 @@ class ApplicationController @Inject()(val controllerComponents: ControllerCompon
     dataRepository.find().map(items => Ok(Json.toJson(items)))
   }
 
-  def create(): Action[JsValue] = Action.async(parse.json) { implicit request =>
+  def create: Action[JsValue] = Action.async(parse.json) { implicit request =>
     request.body.validate[DataModel] match {
       case JsSuccess(dataModel, _) =>
         dataRepository.create(dataModel).map(_ => Created) recover {
-          case _: GenericDriverException => InternalServerError(Json.obj(
+          case _: DatabaseException => InternalServerError(Json.obj(
             "message" -> "Error adding item to Mongo"
           ))
         }

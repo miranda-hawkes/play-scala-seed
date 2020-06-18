@@ -56,8 +56,6 @@ class ApplicationControllerSpec extends UnitSpec with GuiceOneAppPerSuite with M
     100
   )
 
-  val writeResult = LastError(ok = true, None, None, None, 0, None, updatedExisting = false, None, None, wtimeout = false, None, None)
-
   "ApplicationController .index" when {
 
     when(mockDataRepository.find(any())(any()))
@@ -125,6 +123,31 @@ class ApplicationControllerSpec extends UnitSpec with GuiceOneAppPerSuite with M
 
         status(result) shouldBe Status.INTERNAL_SERVER_ERROR
         await(bodyOf(result)) shouldBe Json.obj("message" -> "Error adding item to Mongo").toString()
+      }
+    }
+
+    "ApplicationController .read(id: String)" when {
+      "the supplied JSON is valid" should {
+        when(mockDataRepository.read(any()))
+          .thenReturn(Future(dataModel))
+        val resultValid = TestApplicationController
+          .read("abcd")(FakeRequest())
+        "return the correct json" in {
+          await(jsonBodyOf(resultValid)) shouldBe Json.arr(jsonBody)
+        }
+        "return the OK status" in{
+          status(resultValid) shouldBe Status.OK
+        }
+      }
+      "the mongo data read failed" should {
+        when(mockDataRepository.read(any()))
+          .thenReturn(Future.failed(GenericDriverException("Error")))
+        "return an error" in {
+          val result = TestApplicationController
+            .read("abcd")(FakeRequest())
+          status(result) shouldBe Status.INTERNAL_SERVER_ERROR
+          await(jsonBodyOf(result)) shouldBe Json.obj("message" -> "Error adding item to Mongo")
+        }
       }
     }
   }
